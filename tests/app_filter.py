@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-app_filter.py - Application Filtering (QOSMOS) test.
+app_filter.py - Application Filtering test.
 Tests multiple protocols: HTTP, HTTPS, DNS, SMTP, IMAP, streaming.
 Python 3.5.2 compatible.
 """
@@ -138,10 +138,10 @@ def _test_imap(config, timeout, no_verify):
 
 
 def main():
-    parser = helpers.base_parser("Application Filtering (QOSMOS) Test")
+    parser = helpers.base_parser("Application Filtering Test")
     args = parser.parse_args()
 
-    helpers.emit_header("Application Filtering (QOSMOS) Test")
+    helpers.emit_header("Application Filtering Test")
 
     targets, custom = helpers.filter_targets(PRESETS, args.target)
 
@@ -165,6 +165,24 @@ def main():
         else:
             verdict, detail = ("INCONCLUSIVE", "Unknown protocol: %s" % proto)
 
+        helpers.emit_result(verdict, label, detail)
+        total += 1
+        if verdict == "BLOCKED":
+            blocked += 1
+        elif verdict == "ALLOWED":
+            allowed += 1
+        else:
+            inconclusive += 1
+        time.sleep(0.3)
+
+    for entry in custom:
+        label = "[custom] %s" % entry
+        if entry.startswith("http://") or entry.startswith("https://"):
+            config = {"proto": "http", "url": entry}
+            verdict, detail = _test_http(config, args.timeout, args.no_verify)
+        else:
+            config = {"proto": "http", "url": "https://%s" % entry}
+            verdict, detail = _test_http(config, args.timeout, args.no_verify)
         helpers.emit_result(verdict, label, detail)
         total += 1
         if verdict == "BLOCKED":

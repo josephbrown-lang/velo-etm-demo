@@ -141,14 +141,14 @@ header{display:flex;align-items:center;padding:0 28px;height:52px;background:rgb
 
 <script>
 var tests = [
-  { name: 'Web/URL Filter',         file: 'web_filter.py',         icon: 'WEB', desc: 'Test URLs by category (gambling, social media, etc.). Preset sites plus your own custom URLs. Detects VeloCloud block pages vs site-side rejections.' },
-  { name: 'IDPS',                    file: 'idps.py',               icon: 'IDS', desc: 'Send requests with known threat signatures: SUNBURST, CobaltStrike, Log4j, cryptominers, stealers, and phishing domains.' },
-  { name: 'URL Reputation',          file: 'url_reputation.py',     icon: 'REP', desc: 'Test known malicious and phishing URLs against URL reputation filtering.' },
-  { name: 'IP Reputation',           file: 'ip_reputation.py',      icon: 'IP',  desc: 'Test TCP connections to known bad IPs: C2 servers, Tor exit nodes, botnet infrastructure.' },
-  { name: 'GEO/IP Filter',           file: 'geo_ip.py',             icon: 'GEO', desc: 'Test government websites from countries worldwide. Verifies geographic-based URL filtering.' },
-  { name: 'DNS Filter',              file: 'dns_filter.py',         icon: 'DNS', desc: 'Test DNS resolution of known malware, phishing, and C2 domains.' },
-  { name: 'App Filter',     file: 'app_filter.py',         icon: 'APP', desc: 'Generate traffic across HTTP, HTTPS, DNS, SMTP, IMAP, and streaming protocols to test application-layer DPI signatures.' },
-  { name: 'Dynamic Blocklist',       file: 'dynamic_blocklist.py',  icon: 'DBL', desc: 'Fetch entries from external threat feeds (URLhaus, OpenPhish) and test each URL against the firewall.' }
+  { name: 'Web/URL Filter',         file: 'web_filter.py',         icon: 'WEB', hint: 'Add URL (e.g. example.com)', desc: 'Test URLs by category (gambling, social media, etc.). Preset sites plus your own custom URLs. Detects VeloCloud block pages vs site-side rejections.' },
+  { name: 'IDPS',                    file: 'idps.py',               icon: 'IDS', hint: 'Add URL or domain to test', desc: 'Send requests with known threat signatures: SUNBURST, CobaltStrike, Log4j, cryptominers, stealers, and phishing domains.' },
+  { name: 'URL Reputation',          file: 'url_reputation.py',     icon: 'REP', hint: 'Add URL to test', desc: 'Test known malicious and phishing URLs against URL reputation filtering.' },
+  { name: 'IP Reputation',           file: 'ip_reputation.py',      icon: 'IP',  hint: 'Add IP or IP:port', desc: 'Test TCP connections to known bad IPs: C2 servers, Tor exit nodes, botnet infrastructure.' },
+  { name: 'GEO/IP Filter',           file: 'geo_ip.py',             icon: 'GEO', hint: 'Add country URL to test', desc: 'Test government websites from countries worldwide. Verifies geographic-based URL filtering.' },
+  { name: 'DNS Filter',              file: 'dns_filter.py',         icon: 'DNS', hint: 'Add domain to test', desc: 'Test DNS resolution of known malware, phishing, and C2 domains.' },
+  { name: 'App Filter',              file: 'app_filter.py',         icon: 'APP', hint: 'Add URL to test', desc: 'Generate traffic across HTTP, HTTPS, DNS, SMTP, IMAP, and streaming protocols to test application-layer DPI signatures.' },
+  { name: 'Dynamic Blocklist',       file: 'dynamic_blocklist.py',  icon: 'DBL', hint: 'Add feed URL', desc: 'Fetch entries from external threat feeds (URLhaus, OpenPhish) and test each URL against the firewall.' }
 ];
 
 var currentIdx = 0;
@@ -182,7 +182,8 @@ function buildSidebar() {
     html += '</div>';
     html += '<div class="target-list" id="targets-' + i + '"><div style="color:var(--muted);font-size:11px;padding:8px 0">Loading targets...</div></div>';
     html += '<div class="add-row">';
-    html += '<input type="text" id="addInput-' + i + '" placeholder="Add custom entry..." onkeydown="if(event.key===\'Enter\'){addCustom(' + i + ',event)}">';
+    var hint = t.hint || 'Add custom entry...';
+    html += '<input type="text" id="addInput-' + i + '" placeholder="' + hint + '" onkeydown="if(event.key===\'Enter\'){addCustom(' + i + ',event)}">';
     html += '<button onclick="addCustom(' + i + ', event)">+ Add</button>';
     html += '</div>';
     html += '<button class="run-btn" id="runBtn-' + i + '" onclick="runTest(' + i + ', event)">&#9654; Run Test</button>';
@@ -203,7 +204,8 @@ function loadTargets(idx) {
       var data = JSON.parse(xhr.responseText);
       moduleTargets[idx] = [];
       for (var i = 0; i < data.length; i++) {
-        moduleTargets[idx].push({ key: data[i].key, label: data[i].label, checked: true, custom: false });
+        var on = !data[i].defaultOff;
+        moduleTargets[idx].push({ key: data[i].key, label: data[i].label, checked: on, custom: false });
       }
       targetsLoaded[idx] = true;
       renderTargets(idx);

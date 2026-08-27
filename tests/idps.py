@@ -97,6 +97,24 @@ def main():
             inconclusive += 1
         time.sleep(0.3)
 
+    for entry in custom:
+        if entry.startswith("http://") or entry.startswith("https://"):
+            label = "[custom] %s" % entry
+            config = {"method": "GET", "url": entry}
+            verdict, detail = _run_http_test(config, args.timeout)
+        else:
+            label = "[custom] %s (DNS)" % entry
+            verdict, detail = _run_dns_test(entry)
+        helpers.emit_result(verdict, label, detail)
+        total += 1
+        if verdict == "BLOCKED":
+            blocked += 1
+        elif verdict == "ALLOWED":
+            allowed += 1
+        else:
+            inconclusive += 1
+        time.sleep(0.3)
+
     elapsed = time.time() - start
     helpers.emit_done(total, blocked, allowed, inconclusive, elapsed)
 

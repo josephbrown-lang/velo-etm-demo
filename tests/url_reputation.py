@@ -13,12 +13,14 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import helpers
 
 PRESETS = [
-    ("safebrowsing-malware", "Google Safe Browsing Malware Test", "http://malware.testing.google.test/testing/malware/"),
-    ("safebrowsing-phish", "Google Safe Browsing Phishing Test", "http://phishing.testing.google.test/testing/phishing/"),
-    ("avsvmcloud", "SUNBURST C2 Domain", "http://avsvmcloud.com"),
-    ("websitetheme", "Known Malicious Domain", "http://websitetheme.com"),
-    ("phishing-1", "Phishing Domain (linkedopports)", "http://linkedopports.com"),
-    ("python-release", "Malicious Library Delivery", "http://python-release.com"),
+    ("safebrowsing-malware", "Google Safe Browsing Malware Test", "http://testsafebrowsing.appspot.com/s/malware.html"),
+    ("safebrowsing-phish", "Google Safe Browsing Phishing Test", "http://testsafebrowsing.appspot.com/s/phishing.html"),
+    ("wicar-malware", "WICAR Malware Test File", "http://malware.wicar.org/data/eicar.com"),
+    ("wicar-site", "WICAR Test Site", "http://www.wicar.org"),
+    ("wicar-cryptominer", "WICAR Cryptominer Page", "http://malware.wicar.org/data/js_crypto_miner.html"),
+    ("amtso-phishing", "AMTSO Phishing Test Page", "https://www.amtso.org/feature-settings-check-phishing-page/"),
+    ("amtso-pua", "AMTSO PUA Test Page", "https://www.amtso.org/feature-settings-check-potentially-unwanted-applications/"),
+    ("amtso-site", "AMTSO Security Org", "http://amtso.org"),
 ]
 
 

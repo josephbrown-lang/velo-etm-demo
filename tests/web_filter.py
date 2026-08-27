@@ -13,22 +13,34 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import helpers
 
 PRESETS = [
-    ("https://www.coral.co.uk", "Coral", "https://www.coral.co.uk"),
-    ("https://www.fanduel.com", "FanDuel", "https://www.fanduel.com"),
-    ("https://www.ladbrokes.com", "Ladbrokes", "https://www.ladbrokes.com"),
-    ("https://www.sportsbet.com.au", "Sportsbet AU", "https://www.sportsbet.com.au"),
-    ("https://www.bwin.com", "Bwin", "https://www.bwin.com"),
-    ("https://www.888casino.com", "888 Casino", "https://www.888casino.com"),
-    ("https://www.leovegas.com", "LeoVegas", "https://www.leovegas.com"),
-    ("https://www.casumo.com", "Casumo", "https://www.casumo.com"),
-    ("https://www.mrgreen.com", "Mr Green", "https://www.mrgreen.com"),
-    ("https://www.ggpoker.com", "GGPoker", "https://www.ggpoker.com"),
-    ("https://www.partypoker.com", "partypoker", "https://www.partypoker.com"),
-    ("https://www.thelotter.com", "theLotter", "https://www.thelotter.com"),
-    ("https://www.facebook.com", "Facebook", "https://www.facebook.com"),
-    ("https://www.youtube.com", "YouTube", "https://www.youtube.com"),
-    ("https://www.cnn.com", "CNN", "https://www.cnn.com"),
-    ("https://www.reddit.com", "Reddit", "https://www.reddit.com"),
+    # Social Media
+    ("https://www.instagram.com", "Instagram (Social)", "https://www.instagram.com"),
+    ("https://www.tiktok.com", "TikTok (Social)", "https://www.tiktok.com"),
+    ("https://www.twitter.com", "Twitter/X (Social)", "https://www.twitter.com"),
+    ("https://www.snapchat.com", "Snapchat (Social)", "https://www.snapchat.com"),
+    # Streaming
+    ("https://www.netflix.com", "Netflix (Streaming)", "https://www.netflix.com"),
+    ("https://www.twitch.tv", "Twitch (Streaming)", "https://www.twitch.tv"),
+    ("https://www.youtube.com", "YouTube (Streaming)", "https://www.youtube.com"),
+    # Gambling
+    ("https://www.bet365.com", "bet365 (Gambling)", "https://www.bet365.com"),
+    ("https://www.draftkings.com", "DraftKings (Gambling)", "https://www.draftkings.com"),
+    ("https://www.fanduel.com", "FanDuel (Gambling)", "https://www.fanduel.com"),
+    # Adult
+    ("https://www.pornhub.com", "Pornhub (Adult)", "https://www.pornhub.com"),
+    ("https://www.xvideos.com", "XVideos (Adult)", "https://www.xvideos.com"),
+    # News
+    ("https://www.cnn.com", "CNN (News)", "https://www.cnn.com"),
+    ("https://www.bbc.co.uk", "BBC News (News)", "https://www.bbc.co.uk"),
+    ("https://www.foxnews.com", "Fox News (News)", "https://www.foxnews.com"),
+    # Shopping
+    ("https://www.amazon.com", "Amazon (Shopping)", "https://www.amazon.com"),
+    ("https://www.walmart.com", "Walmart (Shopping)", "https://www.walmart.com"),
+    # Gaming
+    ("https://store.steampowered.com", "Steam (Gaming)", "https://store.steampowered.com"),
+    ("https://www.roblox.com", "Roblox (Gaming)", "https://www.roblox.com"),
+    # General
+    ("https://www.reddit.com", "Reddit (Forum)", "https://www.reddit.com"),
 ]
 
 

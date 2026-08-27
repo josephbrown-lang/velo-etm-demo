@@ -7,7 +7,6 @@ Python 3.5.2 compatible (no f-strings).
 import os
 import re
 import sys
-import json
 import subprocess
 from flask import Flask, send_from_directory, jsonify, request, Response
 from flask_cors import CORS
@@ -28,22 +27,26 @@ SCRIPTS = [
         "file": "web_filter.py",
         "name": "Web/URL Filter",
         "targets": [
-            {"key": "https://www.coral.co.uk",        "label": "Coral"},
-            {"key": "https://www.fanduel.com",         "label": "FanDuel"},
-            {"key": "https://www.ladbrokes.com",       "label": "Ladbrokes"},
-            {"key": "https://www.sportsbet.com.au",    "label": "Sportsbet AU"},
-            {"key": "https://www.bwin.com",            "label": "Bwin"},
-            {"key": "https://www.888casino.com",       "label": "888 Casino"},
-            {"key": "https://www.leovegas.com",        "label": "LeoVegas"},
-            {"key": "https://www.casumo.com",          "label": "Casumo"},
-            {"key": "https://www.mrgreen.com",         "label": "Mr Green"},
-            {"key": "https://www.ggpoker.com",         "label": "GGPoker"},
-            {"key": "https://www.partypoker.com",      "label": "partypoker"},
-            {"key": "https://www.thelotter.com",       "label": "theLotter"},
-            {"key": "https://www.facebook.com",        "label": "Facebook"},
-            {"key": "https://www.youtube.com",         "label": "YouTube"},
-            {"key": "https://www.cnn.com",             "label": "CNN"},
-            {"key": "https://www.reddit.com",          "label": "Reddit"},
+            {"key": "https://www.instagram.com",       "label": "Instagram (Social)"},
+            {"key": "https://www.tiktok.com",          "label": "TikTok (Social)"},
+            {"key": "https://www.twitter.com",         "label": "Twitter/X (Social)"},
+            {"key": "https://www.snapchat.com",        "label": "Snapchat (Social)"},
+            {"key": "https://www.netflix.com",         "label": "Netflix (Streaming)"},
+            {"key": "https://www.twitch.tv",           "label": "Twitch (Streaming)"},
+            {"key": "https://www.youtube.com",         "label": "YouTube (Streaming)"},
+            {"key": "https://www.bet365.com",          "label": "bet365 (Gambling)"},
+            {"key": "https://www.draftkings.com",      "label": "DraftKings (Gambling)"},
+            {"key": "https://www.fanduel.com",         "label": "FanDuel (Gambling)"},
+            {"key": "https://www.pornhub.com",         "label": "Pornhub (Adult)"},
+            {"key": "https://www.xvideos.com",         "label": "XVideos (Adult)"},
+            {"key": "https://www.cnn.com",             "label": "CNN (News)"},
+            {"key": "https://www.bbc.co.uk",           "label": "BBC News (News)"},
+            {"key": "https://www.foxnews.com",         "label": "Fox News (News)"},
+            {"key": "https://www.amazon.com",          "label": "Amazon (Shopping)"},
+            {"key": "https://www.walmart.com",         "label": "Walmart (Shopping)"},
+            {"key": "https://store.steampowered.com",  "label": "Steam (Gaming)"},
+            {"key": "https://www.roblox.com",          "label": "Roblox (Gaming)"},
+            {"key": "https://www.reddit.com",          "label": "Reddit (Forum)"},
         ],
     },
     # 1 - IDPS
@@ -77,10 +80,12 @@ SCRIPTS = [
         "targets": [
             {"key": "safebrowsing-malware", "label": "Google Safe Browsing Malware Test"},
             {"key": "safebrowsing-phish",   "label": "Google Safe Browsing Phishing Test"},
-            {"key": "avsvmcloud",           "label": "SUNBURST C2 Domain"},
-            {"key": "websitetheme",         "label": "Known Malicious Domain"},
-            {"key": "phishing-1",           "label": "linkedopports.com (Phishing)"},
-            {"key": "python-release",       "label": "python-release.com (Malicious Library)"},
+            {"key": "wicar-malware",        "label": "WICAR Malware Test File"},
+            {"key": "wicar-site",           "label": "WICAR Test Site"},
+            {"key": "wicar-cryptominer",    "label": "WICAR Cryptominer Page"},
+            {"key": "amtso-phishing",       "label": "AMTSO Phishing Test Page"},
+            {"key": "amtso-pua",            "label": "AMTSO PUA Test Page"},
+            {"key": "amtso-site",           "label": "AMTSO Security Org"},
         ],
     },
     # 3 - IP Reputation
@@ -110,7 +115,6 @@ SCRIPTS = [
             {"key": "FR", "label": "France (FR)"},
             {"key": "IT", "label": "Italy (IT)"},
             {"key": "BR", "label": "Brazil (BR)"},
-            {"key": "RU", "label": "Russia (RU)"},
             {"key": "KR", "label": "South Korea (KR)"},
             {"key": "AU", "label": "Australia (AU)"},
             {"key": "MX", "label": "Mexico (MX)"},
@@ -212,11 +216,11 @@ SCRIPTS = [
             {"key": "cryptominer.testdomain.net",  "label": "Cryptominer Domain"},
         ],
     },
-    # 6 - App Filter / QOSMOS
+    # 6 - App Filter
     {
         "id": 6,
         "file": "app_filter.py",
-        "name": "App Filter / QOSMOS",
+        "name": "App Filter",
         "targets": [
             {"key": "http-example",      "label": "HTTP example.com"},
             {"key": "http-httpbin",      "label": "HTTP httpbin.org"},
@@ -299,16 +303,13 @@ def get_targets(idx):
 @app.route('/run/<int:idx>')
 def run_script(idx):
     if idx < 0 or idx >= len(SCRIPTS):
-        return Response(
-            "data: %s\n\n" % json.dumps({"error": "Invalid module index: %d" % idx}),
-            mimetype='text/event-stream',
-        )
+        return "Unknown script", 404
 
     script_info = SCRIPTS[idx]
     script_path = os.path.join(PROJECT_ROOT, "tests", script_info["file"])
 
     # Build command
-    cmd = [sys.executable, script_path, '--no-verify']
+    cmd = [sys.executable, '-u', script_path, '--no-verify']
 
     # Parse selected targets from query string
     targets = request.args.getlist('targets')
@@ -316,10 +317,7 @@ def run_script(idx):
     # Input sanitization
     error = _validate_targets(targets)
     if error is not None:
-        return Response(
-            "data: %s\n\n" % json.dumps({"error": error}),
-            mimetype='text/event-stream',
-        )
+        return error, 400
 
     for t in targets:
         cmd.append('--target')
@@ -341,14 +339,15 @@ def run_script(idx):
             for raw_line in iter(proc.stdout.readline, b''):
                 line = raw_line.decode('utf-8', errors='replace').rstrip('\n').rstrip('\r')
                 line = strip_ansi(line)
-                payload = json.dumps({"line": line})
-                yield "data: %s\n\n" % payload
+                if line:
+                    yield "data: %s\n\n" % line
 
             proc.wait()
-            yield "data: %s\n\n" % json.dumps({"exit_code": proc.returncode})
+            yield "data: __DONE__\n\n"
 
         except Exception as exc:
-            yield "data: %s\n\n" % json.dumps({"error": str(exc)})
+            yield "data: @@INFO@@ Error: %s\n\n" % str(exc)
+            yield "data: __DONE__\n\n"
 
     return Response(generate(), mimetype='text/event-stream')
 

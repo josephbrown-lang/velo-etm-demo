@@ -147,7 +147,7 @@ var tests = [
   { name: 'IP Reputation',           file: 'ip_reputation.py',      icon: 'IP',  desc: 'Test TCP connections to known bad IPs: C2 servers, Tor exit nodes, botnet infrastructure.' },
   { name: 'GEO/IP Filter',           file: 'geo_ip.py',             icon: 'GEO', desc: 'Test government websites from countries worldwide. Verifies geographic-based URL filtering.' },
   { name: 'DNS Filter',              file: 'dns_filter.py',         icon: 'DNS', desc: 'Test DNS resolution of known malware, phishing, and C2 domains.' },
-  { name: 'App Filter (QOSMOS)',     file: 'app_filter.py',         icon: 'APP', desc: 'Generate traffic across HTTP, HTTPS, DNS, SMTP, IMAP, and streaming protocols to test application-layer DPI signatures.' },
+  { name: 'App Filter',     file: 'app_filter.py',         icon: 'APP', desc: 'Generate traffic across HTTP, HTTPS, DNS, SMTP, IMAP, and streaming protocols to test application-layer DPI signatures.' },
   { name: 'Dynamic Blocklist',       file: 'dynamic_blocklist.py',  icon: 'DBL', desc: 'Fetch entries from external threat feeds (URLhaus, OpenPhish) and test each URL against the firewall.' }
 ];
 
@@ -281,6 +281,7 @@ function removeCustom(idx, i, event) {
 
 function selectCard(idx) {
   if (running) return;
+  if (idx === currentIdx && targetsLoaded[idx]) return;
   currentIdx = idx;
   var cards = document.querySelectorAll('.test-card');
   for (var i = 0; i < cards.length; i++) {

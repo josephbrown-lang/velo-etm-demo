@@ -208,12 +208,12 @@ SCRIPTS = [
         "targets": [
             {"key": "avsvmcloud.com",             "label": "SUNBURST C2 Domain"},
             {"key": "websitetheme.com",            "label": "Known Malicious Domain"},
-            {"key": "test.mycisco-helpdesk.ml",    "label": "Data Exfiltration Domain"},
-            {"key": "linkedopports.com",           "label": "Phishing Domain"},
-            {"key": "python-release.com",          "label": "Malicious Library Domain"},
-            {"key": "malware.testcategory.com",    "label": "Malware Test Domain"},
-            {"key": "botnet-cc.example.com",       "label": "Botnet C2 Domain"},
-            {"key": "cryptominer.testdomain.net",  "label": "Cryptominer Domain"},
+            {"key": "malwaredomainlist.com",         "label": "Malware Domain List"},
+            {"key": "urlhaus.abuse.ch",            "label": "URLhaus Threat Feed"},
+            {"key": "phishtank.org",               "label": "PhishTank Phishing DB"},
+            {"key": "openphish.com",               "label": "OpenPhish Feed"},
+            {"key": "feodotracker.abuse.ch",       "label": "Feodo Tracker (Banking Trojan)"},
+            {"key": "sslbl.abuse.ch",              "label": "SSL Blacklist (abuse.ch)"},
         ],
     },
     # 6 - App Filter
@@ -249,7 +249,6 @@ SCRIPTS = [
         "targets": [
             {"key": "abuse-ch-urlhaus",  "label": "URLhaus Threat Feed (abuse.ch)"},
             {"key": "openphish",         "label": "OpenPhish Feed"},
-            {"key": "custom-blocklist",  "label": "Custom Blocklist URL"},
         ],
     },
 ]

@@ -17,12 +17,12 @@ import helpers
 PRESETS = [
     ("avsvmcloud.com", "SUNBURST C2 Domain", "avsvmcloud.com"),
     ("websitetheme.com", "Known Malicious Domain", "websitetheme.com"),
-    ("test.mycisco-helpdesk.ml", "Data Exfiltration Domain", "test.mycisco-helpdesk.ml"),
-    ("linkedopports.com", "Phishing Domain", "linkedopports.com"),
-    ("python-release.com", "Malicious Library Domain", "python-release.com"),
-    ("malware.testcategory.com", "Malware Test Domain", "malware.testcategory.com"),
-    ("botnet-cc.example.com", "Botnet C2 Test Domain", "botnet-cc.example.com"),
-    ("cryptominer.testdomain.net", "Cryptominer Test Domain", "cryptominer.testdomain.net"),
+    ("malwaredomainlist.com", "Malware Domain List", "malwaredomainlist.com"),
+    ("urlhaus.abuse.ch", "URLhaus Threat Feed", "urlhaus.abuse.ch"),
+    ("phishtank.org", "PhishTank Phishing DB", "phishtank.org"),
+    ("openphish.com", "OpenPhish Feed", "openphish.com"),
+    ("feodotracker.abuse.ch", "Feodo Tracker (Banking Trojan)", "feodotracker.abuse.ch"),
+    ("sslbl.abuse.ch", "SSL Blacklist (abuse.ch)", "sslbl.abuse.ch"),
 ]
 
 

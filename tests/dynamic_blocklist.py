@@ -17,6 +17,18 @@ PRESETS = [
     ("openphish", "OpenPhish Feed", "https://openphish.com/feed.txt"),
 ]
 
+
+def _classify_blocklist_response(status, body, err):
+    """Like classify_web_response but treats timeouts as INCONCLUSIVE
+    since malware servers go offline frequently."""
+    if err is not None:
+        err_lower = err.lower()
+        if "timeout" in err_lower:
+            return ("INCONCLUSIVE", "Request timed out - host may be offline")
+        if "connectionreset" in err_lower or "connectionrefused" in err_lower:
+            return ("INCONCLUSIVE", "%s - host may be offline" % err)
+    return helpers.classify_web_response(status, body, err)
+
 MAX_URLS_PER_FEED = 10
 
 
@@ -62,7 +74,7 @@ def _test_feed(feed_label, feed_url, timeout, no_verify):
     for url in urls[:MAX_URLS_PER_FEED]:
         test_status, test_body, test_err = helpers.http_get(
             url, timeout=timeout, no_verify=no_verify)
-        verdict, detail = helpers.classify_web_response(
+        verdict, detail = _classify_blocklist_response(
             test_status, test_body, test_err)
         label = "%s: %s" % (feed_label, url)
         results.append((verdict, label, detail))

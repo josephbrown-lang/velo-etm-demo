@@ -17,8 +17,7 @@ import helpers
 warnings.filterwarnings("ignore")
 
 PRESETS = [
-    ("spyware-fh", "Spyware FH Variant", {"method": "GET", "url": "http://207.189.189.230/command.php?t=1&id=", "headers": {"Host": "207.189.189.230", "User-Agent": "Mozilla/5.0 (Windows NT)"}}),
-    ("sunburst-http", "SUNBURST Malware HTTP", {"method": "GET", "url": "http://avsvmcloud.com"}),
+    ("spyware-fh", "Spyware FH Variant", {"method": "GET", "url": "http://example.com/command.php?t=1&id=", "headers": {"Host": "207.189.189.230", "User-Agent": "Mozilla/5.0 (Windows NT)"}}),
     ("sunburst-dns2", "SUNBURST Domain (websitetheme)", {"type": "dns", "domain": "websitetheme.com"}),
     ("xanthe-miner", "Xanthe Crypto Miner", {"method": "GET", "url": "http://example.com/files/fczyo", "headers": {"User-Agent": "fczyo-cron/"}}),
     ("cobalt-c2", "CobaltStrike C2", {"method": "POST", "url": "http://example.com/", "headers": {"User-Agent": "testCobalt Strike Beacon)"}}),
@@ -27,12 +26,12 @@ PRESETS = [
     ("template-inject", "Template Injection", {"method": "GET", "url": "http://example.com/word/tpl/test?template=anexo"}),
     ("apache-struts", "Apache Struts OGNL", {"method": "GET", "url": "http://example.com?id=%25%7b%23"}),
     ("trickbot", "Trickbot C2", {"method": "GET", "url": "http://example.com/56evcxv"}),
-    ("erbium", "Erbium Stealer", {"method": "GET", "url": "http://example.com/api/getBuild?type=x", "headers": {"Host": "207.189.189.230", "User-Agent": "Erbium-UA-"}}),
+    ("erbium", "Erbium Stealer", {"method": "GET", "url": "http://example.com/api/getBuild?type=x", "headers": {"User-Agent": "Erbium-UA-"}}),
     ("lilith", "Lilith Stealer", {"method": "GET", "url": "http://example.com/gate/01234567-89ab-cdef-0123-456789abcdef/getCommands", "headers": {"User-Agent": "Lilith-Bot/xyxyxyxy"}}),
     ("lilith-2", "Lilith Stealer (alt)", {"method": "GET", "url": "http://example.com/gate/getCommands", "headers": {"User-Agent": "Lilith-Bot/xyxyxyxy"}}),
-    ("malware-exfil", "Data Exfiltration DNS", {"type": "dns", "domain": "test.mycisco-helpdesk.ml"}),
-    ("phishing-dns", "Phishing Domain DNS", {"type": "dns", "domain": "linkedopports.com"}),
-    ("malware-dns", "Malicious Library DNS", {"type": "dns", "domain": "python-release.com"}),
+    ("malware-vault-dns", "Malware Vault DNS", {"type": "dns", "domain": "vxvault.net"}),
+    ("malc0de-dns", "Malc0de DNS", {"type": "dns", "domain": "malc0de.com"}),
+    ("malware-bazaar-dns", "MalwareBazaar DNS", {"type": "dns", "domain": "bazaar.abuse.ch"}),
 ]
 
 

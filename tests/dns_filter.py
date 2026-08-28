@@ -15,7 +15,6 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import helpers
 
 PRESETS = [
-    ("avsvmcloud.com", "SUNBURST C2 Domain", "avsvmcloud.com"),
     ("websitetheme.com", "Known Malicious Domain", "websitetheme.com"),
     ("malwaredomainlist.com", "Malware Domain List", "malwaredomainlist.com"),
     ("urlhaus.abuse.ch", "URLhaus Threat Feed", "urlhaus.abuse.ch"),

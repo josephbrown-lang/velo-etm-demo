@@ -56,7 +56,6 @@ SCRIPTS = [
         "name": "IDPS",
         "targets": [
             {"key": "sunburst-http",   "label": "SUNBURST Malware HTTP"},
-            {"key": "sunburst-dns",    "label": "SUNBURST Malware DNS"},
             {"key": "cobalt-c2",       "label": "CobaltStrike C2"},
             {"key": "log4j",           "label": "Log4j Exploit"},
             {"key": "xanthe-miner",    "label": "Xanthe Crypto Miner"},
@@ -208,7 +207,6 @@ SCRIPTS = [
         "file": "dns_filter.py",
         "name": "DNS Filter",
         "targets": [
-            {"key": "avsvmcloud.com",             "label": "SUNBURST C2 Domain"},
             {"key": "websitetheme.com",            "label": "Known Malicious Domain"},
             {"key": "malwaredomainlist.com",         "label": "Malware Domain List"},
             {"key": "urlhaus.abuse.ch",            "label": "URLhaus Threat Feed"},

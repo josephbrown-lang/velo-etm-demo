@@ -73,6 +73,10 @@ header{display:flex;align-items:center;padding:0 28px;height:52px;background:rgb
 .run-btn:hover{background:var(--teal-dark)}
 .run-btn:disabled{opacity:.45;cursor:not-allowed}
 
+.run-all-btn{margin:6px 10px 12px;width:calc(100% - 20px);padding:10px;font-size:12px;font-weight:700;font-family:var(--font);border-radius:6px;border:2px solid var(--teal);background:var(--white);color:var(--teal);cursor:pointer;transition:background .15s,color .15s;letter-spacing:.07em;text-transform:uppercase}
+.run-all-btn:hover{background:var(--teal);color:#fff}
+.run-all-btn:disabled{opacity:.45;cursor:not-allowed}
+
 .terminal-pane{background:var(--white);border-radius:14px;box-shadow:var(--shadow);border:1px solid var(--border2);display:flex;flex-direction:column;overflow:hidden}
 .term-topbar{display:flex;align-items:center;gap:10px;padding:10px 18px;border-bottom:1px solid var(--border2);background:#f5f8fd;flex-shrink:0}
 .term-dots span{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:4px}
@@ -164,6 +168,7 @@ var targetsLoaded = {};   // idx -> bool
 function buildSidebar() {
   var sb = document.getElementById('sidebar');
   var html = '<div class="sidebar-label">Test Modules</div>';
+  html += '<button class="run-all-btn" id="runAllBtn" onclick="runAllTests(event)">&#9654;&#9654; Run All Tests</button>';
   for (var i = 0; i < tests.length; i++) {
     var t = tests[i];
     var active = (i === 0) ? ' active' : '';
@@ -404,26 +409,27 @@ function getCheckedTargets(idx) {
   return result;
 }
 
-function runTest(idx, event) {
+function runTest(idx, event, onComplete) {
   if (event) event.stopPropagation();
   if (running) return;
 
   var targets = getCheckedTargets(idx);
   if (targets.length === 0) {
-    alert('No targets selected. Check at least one target to run.');
+    if (!onComplete) alert('No targets selected. Check at least one target to run.');
     return;
   }
 
   running = true;
-  document.querySelectorAll('.run-btn').forEach(function(b) { b.disabled = true; });
+  if (!onComplete) document.querySelectorAll('.run-btn').forEach(function(b) { b.disabled = true; });
   setBadge(idx, 'running');
-  document.getElementById('globalStatus').className = 'status-pill running';
-  document.getElementById('globalStatus').textContent = 'RUNNING';
-
-  statBlocked = statAllowed = statInconclusive = 0;
-  updateStats();
-  document.getElementById('terminal').innerHTML = '';
-  startTimer();
+  if (!onComplete) {
+    document.getElementById('globalStatus').className = 'status-pill running';
+    document.getElementById('globalStatus').textContent = 'RUNNING';
+    statBlocked = statAllowed = statInconclusive = 0;
+    updateStats();
+    document.getElementById('terminal').innerHTML = '';
+    startTimer();
+  }
 
   appendLine('$ python3 ' + tests[idx].file, 'header');
   appendLine('', '');
@@ -445,11 +451,15 @@ function runTest(idx, event) {
       appendLine('[exit 0] ' + tests[idx].name + ' complete.', 'done');
       setBadge(idx, 'done');
       running = false;
-      document.querySelectorAll('.run-btn').forEach(function(b) { b.disabled = false; });
-      document.getElementById('globalStatus').className = 'status-pill';
-      document.getElementById('globalStatus').textContent = 'DONE';
-      stopTimer();
-      document.getElementById('termTitle').textContent = 'velocloud-etm — bash';
+      if (onComplete) {
+        onComplete();
+      } else {
+        document.querySelectorAll('.run-btn').forEach(function(b) { b.disabled = false; });
+        document.getElementById('globalStatus').className = 'status-pill';
+        document.getElementById('globalStatus').textContent = 'DONE';
+        stopTimer();
+        document.getElementById('termTitle').textContent = 'velocloud-etm — bash';
+      }
       return;
     }
     var cls = classifyLine(e.data);
@@ -462,11 +472,103 @@ function runTest(idx, event) {
     es.close();
     setBadge(idx, 'error');
     running = false;
-    document.querySelectorAll('.run-btn').forEach(function(b) { b.disabled = false; });
-    document.getElementById('globalStatus').className = 'status-pill';
-    document.getElementById('globalStatus').textContent = 'ERROR';
-    stopTimer();
+    if (onComplete) {
+      onComplete();
+    } else {
+      document.querySelectorAll('.run-btn').forEach(function(b) { b.disabled = false; });
+      document.getElementById('globalStatus').className = 'status-pill';
+      document.getElementById('globalStatus').textContent = 'ERROR';
+      stopTimer();
+    }
   };
+}
+
+function ensureTargetsLoaded(idx, callback) {
+  if (targetsLoaded[idx]) { callback(); return; }
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', '/targets/' + idx, true);
+  xhr.onload = function() {
+    if (xhr.status === 200) {
+      var data = JSON.parse(xhr.responseText);
+      moduleTargets[idx] = [];
+      for (var i = 0; i < data.length; i++) {
+        var on = !data[i].defaultOff;
+        moduleTargets[idx].push({ key: data[i].key, label: data[i].label, checked: on, custom: false });
+      }
+      targetsLoaded[idx] = true;
+    }
+    callback();
+  };
+  xhr.onerror = function() { callback(); };
+  xhr.send();
+}
+
+function runAllTests(event) {
+  if (event) event.stopPropagation();
+  if (running) return;
+
+  var totalBlocked = 0, totalAllowed = 0, totalInconclusive = 0;
+  var testIdx = 0;
+
+  document.getElementById('terminal').innerHTML = '';
+  statBlocked = statAllowed = statInconclusive = 0;
+  updateStats();
+  startTimer();
+
+  for (var i = 0; i < tests.length; i++) setBadge(i, 'idle');
+  document.querySelectorAll('.run-btn').forEach(function(b) { b.disabled = true; });
+  document.getElementById('runAllBtn').disabled = true;
+  document.getElementById('globalStatus').className = 'status-pill running';
+  document.getElementById('globalStatus').textContent = 'RUNNING ALL';
+
+  function runNext() {
+    if (testIdx >= tests.length) {
+      document.querySelectorAll('.run-btn').forEach(function(b) { b.disabled = false; });
+      document.getElementById('runAllBtn').disabled = false;
+      document.getElementById('globalStatus').className = 'status-pill';
+      document.getElementById('globalStatus').textContent = 'ALL DONE';
+      document.getElementById('termTitle').textContent = 'velocloud-etm — bash';
+      stopTimer();
+      statBlocked = totalBlocked;
+      statAllowed = totalAllowed;
+      statInconclusive = totalInconclusive;
+      updateStats();
+      return;
+    }
+
+    var idx = testIdx++;
+    var cards = document.querySelectorAll('.test-card');
+    for (var i = 0; i < cards.length; i++) {
+      if (i === idx) cards[i].classList.add('active');
+      else cards[i].classList.remove('active');
+    }
+    currentIdx = idx;
+    document.getElementById('termTitle').textContent = 'velocloud-etm — python3 ' + tests[idx].file;
+
+    ensureTargetsLoaded(idx, function() {
+      var targets = getCheckedTargets(idx);
+      if (targets.length === 0) {
+        setBadge(idx, 'done');
+        appendLine('  [Skipped] ' + tests[idx].name + ' — no targets selected', 'warn');
+        appendLine('', '');
+        runNext();
+        return;
+      }
+      runTest(idx, null, function() {
+        totalBlocked += statBlocked;
+        totalAllowed += statAllowed;
+        totalInconclusive += statInconclusive;
+        statBlocked = totalBlocked;
+        statAllowed = totalAllowed;
+        statInconclusive = totalInconclusive;
+        updateStats();
+        appendLine('', '');
+        runNext();
+      });
+    });
+  }
+
+  runNext();
 }
 
 buildSidebar();

@@ -159,6 +159,8 @@ def classify_web_response(status_code, response_body, error_type):
             return ("INCONCLUSIVE", "%s - could be SSL inspection or site issue" % error_type)
         if "gaierror" in err_lower or "dns" in err_lower or "resolve" in err_lower:
             return ("BLOCKED", "DNS resolution failed - likely DNS-level block")
+        if "urlerror" in err_lower:
+            return ("BLOCKED", "%s - connection failed (likely firewall block)" % error_type)
         return ("INCONCLUSIVE", "Request error: %s" % error_type)
 
     if response_body and detect_block_page(response_body):

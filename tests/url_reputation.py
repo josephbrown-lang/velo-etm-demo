@@ -32,18 +32,16 @@ PRESETS = [
     ("mcafee-red", "McAfee Red Verdict Test", "http://www.testingmcafeesites.com/testrep_red.html", "High Risk"),
 
     # Suspicious
-    ("amtso-phishing", "AMTSO Phishing Test Page", "https://www.amtso.org/feature-settings-check-phishing-page/", "Suspicious"),
-    ("amtso-pua", "AMTSO PUA Test Page", "https://www.amtso.org/feature-settings-check-potentially-unwanted-applications/", "Suspicious"),
     ("mcafee-gray", "McAfee Unverified/Gray Test", "http://www.testingmcafeesites.com/testrep_gray.html", "Suspicious"),
 
     # Moderate Risk
-    ("wicar-site", "WICAR Test Site", "http://www.wicar.org", "Moderate Risk"),
     ("mcafee-yellow", "McAfee Medium/Yellow Test", "http://www.testingmcafeesites.com/testrep_yellow.html", "Moderate Risk"),
 
-    # Low Risk
-    ("amtso-site", "AMTSO Security Org", "http://amtso.org", "Low Risk"),
-
-    # Trustworthy - control group (should never be blocked)
+    # Trustworthy - confirmed via BrightCloud (allowed when only Trustworthy permitted)
+    ("amtso-phishing", "AMTSO Phishing Test Page", "https://www.amtso.org/feature-settings-check-phishing-page/", "Trustworthy"),
+    ("amtso-pua", "AMTSO PUA Test Page", "https://www.amtso.org/feature-settings-check-potentially-unwanted-applications/", "Trustworthy"),
+    ("wicar-site", "WICAR Test Site", "http://www.wicar.org", "Trustworthy"),
+    ("amtso-site", "AMTSO Security Org", "http://amtso.org", "Trustworthy"),
     ("google", "Google (control)", "https://www.google.com", "Trustworthy"),
     ("microsoft", "Microsoft (control)", "https://www.microsoft.com", "Trustworthy"),
 ]

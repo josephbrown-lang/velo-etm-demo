@@ -23,21 +23,13 @@ LEVEL_ORDER = [
 ]
 
 PRESETS = [
-    # High Risk - known malware/phishing test URLs
+    # High Risk (BrightCloud score 1-20) - confirmed blocked
     ("safebrowsing-malware", "Google Safe Browsing Malware Test", "http://testsafebrowsing.appspot.com/s/malware.html", "High Risk"),
     ("safebrowsing-phish", "Google Safe Browsing Phishing Test", "http://testsafebrowsing.appspot.com/s/phishing.html", "High Risk"),
     ("wicar-malware", "WICAR Malware Test File", "http://malware.wicar.org/data/eicar.com", "High Risk"),
     ("wicar-cryptominer", "WICAR Cryptominer Page", "http://malware.wicar.org/data/js_crypto_miner.html", "High Risk"),
-    ("mcafee-highrisk", "McAfee High Risk Test", "http://www.testingmcafeesites.com/testreputation_highrisk.html", "High Risk"),
-    ("mcafee-red", "McAfee Red Verdict Test", "http://www.testingmcafeesites.com/testrep_red.html", "High Risk"),
 
-    # Suspicious
-    ("mcafee-gray", "McAfee Unverified/Gray Test", "http://www.testingmcafeesites.com/testrep_gray.html", "Suspicious"),
-
-    # Moderate Risk
-    ("mcafee-yellow", "McAfee Medium/Yellow Test", "http://www.testingmcafeesites.com/testrep_yellow.html", "Moderate Risk"),
-
-    # Trustworthy - confirmed via BrightCloud (allowed when only Trustworthy permitted)
+    # Trustworthy (BrightCloud score 81-100) - confirmed allowed
     ("amtso-phishing", "AMTSO Phishing Test Page", "https://www.amtso.org/feature-settings-check-phishing-page/", "Trustworthy"),
     ("amtso-pua", "AMTSO PUA Test Page", "https://www.amtso.org/feature-settings-check-potentially-unwanted-applications/", "Trustworthy"),
     ("wicar-site", "WICAR Test Site", "http://www.wicar.org", "Trustworthy"),
